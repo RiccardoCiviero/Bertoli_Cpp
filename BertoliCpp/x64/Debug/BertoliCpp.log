@@ -1,4 +1,6 @@
-﻿  BertoliCpp.cpp
+﻿  ax.cpp
+C:\dev.ricca\Bertoli_cpp\BertoliCpp\ax.cpp(4,1): error C2512: 'mx': no appropriate default constructor available
+C:\dev.ricca\Bertoli_cpp\BertoliCpp\mx.h(15,7): message : see declaration of 'mx'
+  BertoliCpp.cpp
   mx.cpp
   Generating Code...
-  BertoliCpp.vcxproj -> C:\dev.ricca\Bertoli_cpp\BertoliCpp\x64\Debug\BertoliCpp.exe

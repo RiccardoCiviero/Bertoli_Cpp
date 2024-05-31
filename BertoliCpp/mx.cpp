@@ -3,6 +3,13 @@
 #include <iostream>
 #include <cassert>
 
+mx::mx(double* data, int r, int c)
+{
+	data = data;
+	r = r;
+	c = c;
+}
+
 mx::mx(int r, int c)
 {
 	this->r = r;
@@ -155,6 +162,14 @@ bool mx::operator!=(mx& m)
 	return !(*this == m);
 }
 
+//ax mx::operator()(int i, int j)
+//{
+//	if (i == ALL) {
+//		return ax()
+//	} else
+//	//return data[i * c + j];
+//}
+
 mx mx::cumsum(Direction_t direction)
 {
 	mx temp(r, c);
@@ -191,8 +206,39 @@ std::istream& operator>>(std::istream& is, mx& m) {
 	return is;
 }
 
-void mx::size() {
+void mx::print_size() {
 	std::cout << "(" << r << ", " << c << ")" << std::endl;
 }
 
+int mx::size(Direction_t dir)
+{
+	return dir == ROW ? r : c;
+}
 
+mx mx::sum(Direction_t direction)
+{
+	if (direction == Direction_t::ROW)
+	{
+		mx temp(1, c);
+		for (int j = 0; j < c; j++)
+			for (int i = 0; i < r; i++)
+				temp.data[j] += data[i * c + j];
+		return temp;
+	}
+	else {
+		mx temp(r, 1);
+		for (int i = 0; i < r; i++)
+			for (int j = 0; j < c; j++)
+				temp.data[i] += data[i * c + j];
+		return temp;
+	}
+
+}
+
+double mx::sum()
+{
+	double sum = 0;
+	for(int i = 0; i < r * c; i++)
+		sum += data[i];
+	return sum;
+}
