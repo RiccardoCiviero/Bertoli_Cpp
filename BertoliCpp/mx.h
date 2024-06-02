@@ -66,6 +66,9 @@ public:
 	double operator()(int i, int j) { get(i, j); };
 	ax operator()(int i, Direction_t dir);
 
+	mx transpose();
+
+
 	/// <summary>
 	/// Returns the maximum value in the matrix
 	/// </summary>

@@ -81,12 +81,15 @@ double mx::get(int i, int j)
 
 void mx::print()
 {
+	std::cout << "mx (" << r << ", " << c << ")" << std::endl;
+	std::cout << "[ ";
 	for (int i = 0; i < r; i++)
 	{
 		for (int j = 0; j < c; j++)
 			std::cout << data[i * c + j] << " ";
-		std::cout << std::endl;
+		std::cout << std::endl << "  ";
 	}
+	std::cout << "]" << std::endl;
 }
 
 mx mx::operator+(mx& m)
@@ -225,6 +228,16 @@ bool mx::operator==(mx& m)
 bool mx::operator!=(mx& m)
 {
 	return !(*this == m);
+}
+
+mx mx::transpose() {
+	mx temp(c, r);
+	for (int i = 0; i < r; i++) {
+		for (int j = 0; j < c; j++) {
+			temp.set(j, i, get(i, j));
+		}
+	}
+	return temp;
 }
 
 

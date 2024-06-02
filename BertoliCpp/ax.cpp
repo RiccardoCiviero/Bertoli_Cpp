@@ -1,5 +1,7 @@
 #include "ax.h"
 
+#include <exception>
+
 ax::ax(mx& m, int i, Direction_t dir)
 {
 	double *data;
@@ -27,6 +29,15 @@ ax::ax(mx& m, int i, Direction_t dir)
 	this->c = c;
 }
 
+ax::ax(mx& m) {
+	if (m.size(COL) != 1) throw new std::exception("Cast to matrix to vector is allowed only for (nx1) matrixes (Column vectors)");
+
+	r = m.size(ROW);
+	c = 1;
+	for (int i = 0; i < r; i++)
+		data[i] = m.get(i,1);
+}
+
 
 int ax::maximum_index()
 {
@@ -45,6 +56,22 @@ int ax::minimum_index()
 		if (data[i] < data[min])
 			min = i;
 	return min;
+}
+
+ax ax::zeros(int r)
+{
+	ax temp(r);
+	for (int i = 0; i < r; i++)
+		temp.data[i] = 0;
+	return temp;
+}
+
+ax ax::ones(int r)
+{
+	ax temp(r);
+	for (int i = 0; i < r; i++)
+		temp.data[i] = 1;
+	return temp;
 }
 
 ax mx::operator()(int i, Direction_t dir)
@@ -89,5 +116,30 @@ mx mx::operator/(ax& a)
 	return mx();
 }
 
+ax ax::slice(int start, int end) {
+	if(end <= start || start < 0 || end < 0) throw new std::exception("Index fail");
+	if(end > r) throw new std::exception("Slice dimension error");
+	
+	ax temp(end - start + 1);
 
+	for(int i = start; i <= end; i++) {
+		temp.set(i - start, data[i]);
+	}
+
+	return temp;
+}
+
+void ax::set(int i, double v) {
+	data[i] = v;
+}
+
+void ax::print() {
+	std::cout << "ax (" << r << ", " << c << ")" << std::endl;
+	std::cout << "[ ";
+	for (int i = 0; i < r; i++)
+	{
+		std::cout << data[i] << " ";
+	}
+	std::cout << "]" << std::endl;
+}
 

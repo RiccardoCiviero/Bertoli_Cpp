@@ -136,6 +136,7 @@
   <ItemGroup>
     <ClInclude Include="ax.h" />
     <ClInclude Include="mx.h" />
+    <ClInclude Include="profile.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

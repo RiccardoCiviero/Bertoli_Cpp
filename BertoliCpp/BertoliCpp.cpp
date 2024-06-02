@@ -4,23 +4,34 @@
 #include <iostream>
 #include "mx.h"
 #include "ax.h"
+#include "profile.h"
 
 constexpr double pi = 3.14159265358979323846;
+constexpr double delta_res = 0.1e-6;
+
+//consteval double sqrt2 = std::sqrt(2.0);
+//consteval double cos60 = std::cos(pi / 3);
+
 
 mx strain_fcn_calc(ax f, ax h, ax b_prime, mx rho);
-double LAM();
-double Bertoli();
+double LAM(profile prof_i, ax K, double delta);
+double Bertoli(profile profile_t, int i);
 void Bertoli_Wrapper();
 
 int main()
 {
 	mx m({{1, 2, 3}, {4, 5, 6}});
-	std::cout << "m "; m.print(); std::cout << std::endl;
+	m.print();
+	mx div = m / 3;
+
 
 	ax a = m(0, ROW);
+	a.print();
+
+	ax diva = a * 2.0;
+	diva.print();
 	ax a1 = m(1, COL);
-	std::cout << "a "; a.print(); std::cout << std::endl;
-	std::cout << "a1 "; a1.print(); std::cout << std::endl;
+	//ax sum = a + a1;
 
 	a1.minimum_index();
 }
@@ -31,16 +42,19 @@ mx strain_fcn_calc(ax f, ax h, ax b_prime, mx rho)
 
 	return p.cumsum(ROW) + f;
 }
-//
-//double LAM()
+
+//double LAM(profile p, ax K, double delta)
 //{
+//	int N = p.f.size(ROW);
 //	mx rho = mx::zeros(N, 1);
 //	mx rho_vec_initializer = mx::zeros(N, N);
+//	ax strain = p.f;
 //
+//	mx mod_matrix = mx({ { 1.0, 1.0 }, { 1.0, 0.0 }, { 1.0, -1.0 }, { 0.0, 1.0 }, { 0.0, 0.0 }, { 0.0, -1.0 }, { -1.0, 1.0 }, { -1.0, 0.0 }, { -1.0, -1.0 } });
 //
 //	while (delta > delta_res)
 //	{
-//		mx delta_vec = delta ; // qui va il vettore 9x2
+//		mx delta_vec = mod_matrix * delta;
 //
 //		for (int i = 0; i < N-1; i++)
 //		{
@@ -48,30 +62,49 @@ mx strain_fcn_calc(ax f, ax h, ax b_prime, mx rho)
 //
 //			rho_vec = rho_vec.maximum(0);
 //
-//			mx strain_vec = strain_fcn_calc(f, h, b_prime, rho_vec, N);
-//			mx E_vec = strain_vec * strain_vec * Y * h + K * rho_vec * h;
+//			mx strain_vec = strain_fcn_calc(strain, p.h, p.b_eff, rho_vec);
+//			mx E_vec = strain_vec * strain_vec * p.Y * p.h + K * rho_vec * p.h;
 //			E_vec.sum(ROW);
 //
-//			i = mx::min(E_vec);
+//			i = E_vec.minimum();
 //
-//			strain = strain_vec[:, i];
-//			rho = rho_vec[:, i];
+//			strain = ax(strain_vec, i, ROW);
+//			rho = ax(rho_vec,i,ROW);
 //		}
 //
 //		delta *= 0.9;
 //
-//		return strain.last() * Y.last();
+//		return strain.last() * p.Y.last();
 //
 //	}
 //	
 //}
-//
-//ax Bertoli()
+
+//double Bertoli(profile profile_t, int i)
 //{
-//	alpha = pi / 3;
-//	ax h = mx::ones(N, 1);
-//	ax b_prime = mx::ones(N, 1);
-//	mx rho = mx::zeros(N, 1);
+//	double alpha = pi / 3;
 //
-//	return LAM(f, h, b_prime, rho);
+//	profile prof_i;
+//
+//	prof_i.h = profile_t.h;
+//	prof_i.x = profile_t.x;
+//
+//	prof_i.a = a_fcn_n(prof_i.x, profile_t.T.get(i,1));
+//
+//	prof_i.b  = prof_i.a / sqrt2;
+//	prof_i.b_eff = prof_i.b / 4.0; // This is b_prime
+//
+//	prof_i.G = G_fcn_n(prof_i.x, profile_t.T(i));
+//	prof_i.nu = nu_fcn_n(prof_i.x, profile_t.T(i));
+//	prof_i.Y = Y_fcn_n(prof_i.x, profile_t.T(i));
+//
+//	ax K = prof_i.G * prof_i.b * prof_i.b * (1 - (cos60* cos60) * prof_i.nu) / (2 * pi * (1 - prof_i.nu) * (std::log((prof_i.h.sum() - prof_i.h.cumsum(ROW))/prof_i.b) - 1));
+//	K.set(K.size(ROW), K(K.size(ROW) - 2));
+//
+//	prof_i.f = (prof_i.a(0) - prof_i.a) / prof_i.a;
+//
+//	double delta = abs(prof_i.f.sum() / (prof_i.N * prof_i.b_eff(0) * prof_i.h(1)));
+//
+//	return LAM(prof_i, K, delta);
 //}
+
