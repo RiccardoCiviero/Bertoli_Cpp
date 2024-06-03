@@ -42,6 +42,8 @@ public:
 
 	double last() { return data[r-1]; }
 
+	ax cumsum() const { return (ax&)mx::cumsum(ROW); }
+	double sum() const { return mx::sum(); }
 
 
 	// Matrix-Vector inverse operators
@@ -57,6 +59,8 @@ public:
 	ax operator/(const ax& b) const { return (ax&)(((mx&)*this) / (mx&)b); }
 	
 	// Array-Value operators
+	ax operator+(double v) { return (ax&)(((mx&)*this) + v); }
+	ax operator-(double v) { return (ax&)(((mx&)*this) - v); }
 	ax operator*(double v) { return (ax&)(((mx&)*this) * v); }
 	ax operator/(double v) { return (ax&)(((mx&)*this) / v); }
 
@@ -68,4 +72,15 @@ private:
 
 	using mx::set;
 	using mx::get;
+
+	using mx::sum;
+	using mx::cumsum;
 };
+
+// Inverse Value-Vector operators
+ax operator+(double a, const ax& m);
+ax operator-(double a, const ax& m);
+ax operator*(double a, const ax& m);
+ax operator/(double a, const ax& m);
+
+ax log(const ax& m);

@@ -87,13 +87,13 @@ public:
 	mx minimum(double n);
 
 
-	mx cumsum(Direction_t direction);
-	mx sum(Direction_t direction);
+	mx cumsum(Direction_t direction) const;
+	mx sum(Direction_t direction) const;
 	
 	static mx zeros(int r, int c);
 	static mx ones(int r, int c);
 
-	double sum();
+	double sum() const;
 
 	void print_size();
 	int size(Direction_t dir) const;
@@ -110,8 +110,11 @@ public:
 	mx operator/(const mx& b) const;
 
 	// Matrix-Value operators
+	mx operator+(double a) const;
+	mx operator-(double a) const;
 	mx operator*(double a) const;
 	mx operator/(double a) const;
+
 
 	// Value compare operators
 	bool operator==(const mx& b) const;
@@ -122,9 +125,14 @@ public:
 	mx operator-(const ax& a) const;
 	mx operator*(const ax& a) const;
 	mx operator/(const ax& a) const;
+
 	
 };
 
 // Inverse Value-Matrix operators
+mx operator+(double a, const mx& m);
+mx operator-(double a, const mx& m);
 mx operator*(double a, const mx& m);
 mx operator/(double a, const mx& m);
+
+mx log(const mx& m);

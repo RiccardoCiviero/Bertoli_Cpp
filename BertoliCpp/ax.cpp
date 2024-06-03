@@ -119,6 +119,24 @@ mx mx::operator/(const ax& a) const
 	return mx();
 }
 
+ax operator+(double a, const ax& m)
+{
+	return (ax&)(a + (mx&)m);
+}
+ax operator-(double a, const ax& m)
+{
+	return (ax&)(a - (mx&)m);
+}
+ax operator*(double a, const ax& m)
+{
+	return (ax&)(a * (mx&)m);
+}
+ax operator/(double a, const ax& m)
+{
+	return (ax&)(a / (mx&)m);
+}
+
+
 ax ax::slice(int start, int end) {
 	if(end <= start || start < 0 || end < 0) throw new std::exception("Index fail");
 	if(end > r) throw new std::exception("Slice dimension error");
@@ -150,3 +168,6 @@ void ax::print() {
 	std::cout << "]" << std::endl;
 }
 
+ax log(const ax& m) {
+	return (ax&)log((mx&)m);
+}

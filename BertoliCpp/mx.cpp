@@ -188,6 +188,22 @@ mx mx::operator/(const mx& b) const
 	return temp;
 }
 
+mx mx::operator+(double a) const
+{
+	mx temp(r, c);
+	for (int i = 0; i < r * c; i++)
+		temp.data[i] = data[i] + a;
+	return temp;
+}
+
+mx mx::operator-(double a) const
+{
+	mx temp(r, c);
+	for (int i = 0; i < r * c; i++)
+		temp.data[i] = data[i] - a;
+	return temp;
+}
+
 mx mx::operator*(double a) const
 {
 	mx temp(r, c);
@@ -204,6 +220,20 @@ mx mx::operator/(double a) const
 	return temp;
 }
 
+mx operator+(double a, const mx& m)
+{
+	return m + a;
+}
+
+mx operator-(double a, const mx& m)
+{
+	mx temp(m.size(ROW), m.size(COL));
+	for (int i = 0; i < m.size(ROW); i++)
+		for (int j = 0; j < m.size(COL); j++)
+			temp.set(i, j, a - m.get(i, j));
+	return temp;
+}
+
 mx operator*(double a, const mx& m)
 {
 	return m * a;
@@ -216,6 +246,17 @@ mx operator/(double a, const mx& m) {
 			temp.set(i, j, a / m.get(i, j));
 	return temp;
 }
+
+mx log(const mx& m)
+{
+	mx temp(m.size(ROW), m.size(COL));
+	for (int i = 0; i < m.size(ROW); i++)
+		for (int j = 0; j < m.size(COL); j++)
+			temp.set(i, j, log(m.get(i, j)));
+	return mx();
+}
+
+
 
 bool mx::operator==(const mx& b) const
 {
@@ -251,7 +292,7 @@ mx mx::transpose() const {
 //	//return data[i * c + j];
 //}
 
-mx mx::cumsum(Direction_t direction)
+mx mx::cumsum(Direction_t direction) const
 {
 	mx temp(r, c);
 	if (direction == Direction_t::ROW)
@@ -297,7 +338,7 @@ int mx::size(Direction_t dir) const
 }
 
 // ROW returns a column vector and vice versa
-mx mx::sum(Direction_t direction)
+mx mx::sum(Direction_t direction) const
 {
 	if (direction == Direction_t::ROW)
 	{
@@ -334,7 +375,7 @@ mx mx::ones(int r, int c)
 	return mx(data, r, c);
 }
 
-double mx::sum()
+double mx::sum() const
 {
 	double sum = 0;
 	for(int i = 0; i < r * c; i++)
