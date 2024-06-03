@@ -80,39 +80,42 @@ ax mx::operator()(int i, Direction_t dir)
 }
 
 
-mx mx::operator+(ax& a)
+// Operators 
+
+
+mx mx::operator+(const ax& a) const
 {
 	mx temp(r, c);
 	for (int i = 0; i < r; i++)
 		for (int j = 0; j < c; j++)
-			data[i * c + j] += a.get(i, 0);
+			data[i * c + j] += a.get(i);
 	return mx();
 }
 
-mx mx::operator-(ax& a)
+mx mx::operator-(const ax& a) const
 {
 	mx temp(r, c);
 	for (int i = 0; i < r; i++)
 		for (int j = 0; j < c; j++)
-			data[i * c + j] -= a.get(i, 0);
+			data[i * c + j] -= a.get(i);
 	return mx();
 }
 
-mx mx::operator*(ax& a)
+mx mx::operator*(const ax& a) const
 {
 	mx temp(r, c);
 	for (int i = 0; i < r; i++)
 		for (int j = 0; j < c; j++)
-			data[i * c + j] *= a.get(i, 0);
+			data[i * c + j] *= a.get(i);
 	return mx();
 }
 
-mx mx::operator/(ax& a)
+mx mx::operator/(const ax& a) const
 {
 	mx temp(r, c);
 	for (int i = 0; i < r; i++)
 		for (int j = 0; j < c; j++)
-			data[i * c + j] /= a.get(i, 0);
+			data[i * c + j] /= a.get(i);
 	return mx();
 }
 
@@ -131,6 +134,10 @@ ax ax::slice(int start, int end) {
 
 void ax::set(int i, double v) {
 	data[i] = v;
+}
+
+double ax::get(int i) const {
+	return data[i];
 }
 
 void ax::print() {

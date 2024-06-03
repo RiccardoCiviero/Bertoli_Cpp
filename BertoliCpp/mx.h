@@ -19,10 +19,10 @@ private:
 protected:
 	double* data;
 	int r, c;
-	mx();
 	mx(double* data, int r, int c);
 
 public:
+	mx();
 	mx(int r, int c);
 	mx(const mx& m);
 	mx(int r, int c, std::initializer_list<double> list);
@@ -30,13 +30,8 @@ public:
 
 	~mx();
 	void set(int i, int j, double val);
-	double get(int i, int j);
+	double get(int i, int j) const;
 	void print();
-	mx operator+(mx& m);
-	mx operator-(mx& m);
-	mx operator*(mx& m);
-	mx operator*(double a);
-	mx operator/(double a);
 	
 	/// <summary>
 	/// Copy-assignment operator 
@@ -56,18 +51,13 @@ public:
 	/// <returns></returns>
 	mx& operator=(mx&& m) noexcept;
 
-	mx operator+=(mx& m);
-	mx operator-=(mx& m);
-	mx operator*=(mx& m);
-	mx operator*=(double a);
-	mx operator/=(double a);
-	bool operator==(mx& m);
-	bool operator!=(mx& m);
-	double operator()(int i, int j) { get(i, j); };
+	
+	double& operator()(int i, int j) { return data[i*c+j]; };
+
+
 	ax operator()(int i, Direction_t dir);
 
-	mx transpose();
-
+	mx transpose() const;
 
 	/// <summary>
 	/// Returns the maximum value in the matrix
@@ -97,11 +87,6 @@ public:
 	mx minimum(double n);
 
 
-	mx operator+(ax& a);
-	mx operator-(ax& a);
-	mx operator*(ax& a);
-	mx operator/(ax& a);
-
 	mx cumsum(Direction_t direction);
 	mx sum(Direction_t direction);
 	
@@ -111,10 +96,35 @@ public:
 	double sum();
 
 	void print_size();
-	int size(Direction_t dir);
+	int size(Direction_t dir) const;
 	
 
 	friend std::ostream& operator<<(std::ostream& os, mx& m);
 	friend std::istream& operator>>(std::istream& is, mx& m);
+
+	// Matrix-Matrix operators
+	// Both inputs are consts as they are not modified
+	mx operator+(const mx& b) const;
+	mx operator-(const mx& b) const;
+	mx operator*(const mx& b) const;
+	mx operator/(const mx& b) const;
+
+	// Matrix-Value operators
+	mx operator*(double a) const;
+	mx operator/(double a) const;
+
+	// Value compare operators
+	bool operator==(const mx& b) const;
+	bool operator!=(const mx& b) const;
+
+	// Matrix-Array broadcast operators
+	mx operator+(const ax& a) const;
+	mx operator-(const ax& a) const;
+	mx operator*(const ax& a) const;
+	mx operator/(const ax& a) const;
+	
 };
 
+// Inverse Value-Matrix operators
+mx operator*(double a, const mx& m);
+mx operator/(double a, const mx& m);

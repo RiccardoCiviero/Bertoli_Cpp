@@ -132,6 +132,7 @@
     <ClCompile Include="ax.cpp" />
     <ClCompile Include="BertoliCpp.cpp" />
     <ClCompile Include="mx.cpp" />
+    <ClCompile Include="profile.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="ax.h" />

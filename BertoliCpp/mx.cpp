@@ -74,7 +74,7 @@ void mx::set(int i, int j, double val)
 	data[i * c + j] = val;
 }
 
-double mx::get(int i, int j)
+double mx::get(int i, int j) const
 {
 	return data[i * c + j];
 }
@@ -92,53 +92,8 @@ void mx::print()
 	std::cout << "]" << std::endl;
 }
 
-mx mx::operator+(mx& m)
-{
-	// check dimensions
-	if (r != m.r || c != m.c)
-		throw new std::exception("Dimensions do not match");
 
-	mx temp(r, c);
-	for (int i = 0; i < r * c; i++)
-		temp.data[i] = data[i] + m.data[i];
-	return temp;
-}
-
-mx mx::operator-(mx& m)
-{
-	if (r != m.r || c != m.c)
-		throw new std::exception("Dimensions do not match");
-	mx temp(r, c);
-	for (int i = 0; i < r * c; i++)
-		temp.data[i] = data[i] - m.data[i];
-	return temp;
-}
-
-mx mx::operator*(mx& m)
-{
-	if (r != m.r || c != m.c)
-		throw new std::exception("Dimensions do not match");
-	mx temp(r, c);
-	for (int i = 0; i < r * c; i++)
-		temp.data[i] = data[i] * m.data[i];
-	return temp;
-}
-
-mx mx::operator*(double a)
-{
-	mx temp(r, c);
-	for (int i = 0; i < r * c; i++)
-		temp.data[i] = data[i] * a;
-	return temp;
-}
-
-mx mx::operator/(double a)
-{
-	mx temp(r, c);
-	for (int i = 0; i < r * c; i++)
-		temp.data[i] = data[i] / a;
-	return temp;
-}
+// Copy - Move operators
 
 mx& mx::operator=(const mx& m)
 {
@@ -147,7 +102,7 @@ mx& mx::operator=(const mx& m)
 		return *this;
 
 	// If same dimensions (of internal array, not nxm), do not reallocate memory
-	if(data != nullptr && r*c == m.r*m.c)
+	if (data != nullptr && r * c == m.r * m.c)
 	{
 		r = m.r;
 		c = m.c;
@@ -180,57 +135,104 @@ mx& mx::operator=(mx&& m) noexcept
 	return *this;
 }
 
-mx mx::operator+=(mx& m)
+
+
+// Operators
+
+mx mx::operator+(const mx& b) const
 {
+	// check dimensions
+	if (this->r != b.r || this->c != b.c)
+		throw new std::exception("Dimensions do not match");
+
+	mx temp(r, c);
 	for (int i = 0; i < r * c; i++)
-		data[i] += m.data[i];
-	return *this;
+		temp.data[i] = this->data[i] + b.data[i];
+	return temp;
 }
 
-mx mx::operator-=(mx& m)
+
+mx mx::operator-(const mx& b) const
 {
+	// check dimensions
+	if (r != b.r || c != b.c)
+		throw new std::exception("Dimensions do not match");
+
+	mx temp(r, c);
 	for (int i = 0; i < r * c; i++)
-		data[i] -= m.data[i];
-	return *this;
+		temp.data[i] = data[i] - b.data[i];
+	return temp;
 }
 
-mx mx::operator*=(mx& m)
+mx mx::operator*(const mx& b) const
 {
+	// check dimensions
+	if (r != b.r || c != b.c)
+		throw new std::exception("Dimensions do not match");
+
+	mx temp(r, c);
 	for (int i = 0; i < r * c; i++)
-		data[i] *= m.data[i];
-	return *this;
+		temp.data[i] = data[i] * b.data[i];
+	return temp;
 }
 
-mx mx::operator*=(double a)
+mx mx::operator/(const mx& b) const
 {
+	// check dimensions
+	if (r != b.r || c != b.c)
+		throw new std::exception("Dimensions do not match");
+
+	mx temp(r, c);
 	for (int i = 0; i < r * c; i++)
-		data[i] *= a;
-	return *this;
+		temp.data[i] = data[i] / b.data[i];
+	return temp;
 }
 
-mx mx::operator/=(double a)
+mx mx::operator*(double a) const
 {
+	mx temp(r, c);
 	for (int i = 0; i < r * c; i++)
-		data[i] /= a;
-	return *this;
+		temp.data[i] = data[i] * a;
+	return temp;
 }
 
-bool mx::operator==(mx& m)
+mx mx::operator/(double a) const
 {
-	if (r != m.r || c != m.c)
+	mx temp(r, c);
+	for (int i = 0; i < r * c; i++)
+		temp.data[i] = data[i] / a;
+	return temp;
+}
+
+mx operator*(double a, const mx& m)
+{
+	return m * a;
+}
+
+mx operator/(double a, const mx& m) {
+	mx temp(m.size(ROW), m.size(COL));
+	for (int i = 0; i < m.size(ROW); i++)
+		for (int j = 0; j < m.size(COL); j++)
+			temp.set(i, j, a / m.get(i, j));
+	return temp;
+}
+
+bool mx::operator==(const mx& b) const
+{
+	if (r != b.r || c != b.c)
 		return false;
 	for (int i = 0; i < r * c; i++)
-		if (data[i] != m.data[i])
+		if (data[i] != b.data[i])
 			return false;
 	return true;
 }
 
-bool mx::operator!=(mx& m)
+bool mx::operator!=(const mx& b) const
 {
-	return !(*this == m);
+	return !(*this == b);
 }
 
-mx mx::transpose() {
+mx mx::transpose() const {
 	mx temp(c, r);
 	for (int i = 0; i < r; i++) {
 		for (int j = 0; j < c; j++) {
@@ -289,7 +291,7 @@ void mx::print_size() {
 	std::cout << "(" << r << ", " << c << ")" << std::endl;
 }
 
-int mx::size(Direction_t dir)
+int mx::size(Direction_t dir) const
 {
 	return dir == ROW ? r : c;
 }

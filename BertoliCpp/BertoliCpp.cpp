@@ -9,40 +9,58 @@
 constexpr double pi = 3.14159265358979323846;
 constexpr double delta_res = 0.1e-6;
 
-//consteval double sqrt2 = std::sqrt(2.0);
-//consteval double cos60 = std::cos(pi / 3);
+constexpr double sqrt2 = 1.41421356237309504880;
+constexpr double cos60 = 0.5;
+
+//
+//mx strain_fcn_calc(ax f, ax h, ax b_prime, mx rho);
+//double LAM(profile prof_i, ax K, double delta);
+//double Bertoli(profile profile_t, int i);
+//void Bertoli_Wrapper();
 
 
-mx strain_fcn_calc(ax f, ax h, ax b_prime, mx rho);
-double LAM(profile prof_i, ax K, double delta);
-double Bertoli(profile profile_t, int i);
-void Bertoli_Wrapper();
 
-int main()
-{
-	mx m({{1, 2, 3}, {4, 5, 6}});
+void Example() {
+	mx m({ {1, 2, 3}, {4, 5, 6} });
 	m.print();
-	mx div = m / 3;
 
+	std::cout << m(1, 2) << std::endl;
+	m(1, 2) = 10;
+
+	m.print();
+
+	double& v = m(1, 2);
+	v = 20;
+	m.print();
+
+	mx div = m * m;
+	div.print();
 
 	ax a = m(0, ROW);
 	a.print();
 
-	ax diva = a * 2.0;
+	ax diva = a;
 	diva.print();
 	ax a1 = m(1, COL);
 	//ax sum = a + a1;
 
 	a1.minimum_index();
+
 }
 
-mx strain_fcn_calc(ax f, ax h, ax b_prime, mx rho)
+
+int main()
 {
-	mx p = h * b_prime * rho;
-
-	return p.cumsum(ROW) + f;
+	Example();
 }
-
+//
+//mx strain_fcn_calc(ax f, ax h, ax b_prime, mx rho)
+//{
+//	mx p = h * b_prime * rho;
+//
+//	return p.cumsum(ROW) + f;
+//}
+//
 //double LAM(profile p, ax K, double delta)
 //{
 //	int N = p.f.size(ROW);
@@ -79,25 +97,22 @@ mx strain_fcn_calc(ax f, ax h, ax b_prime, mx rho)
 //	}
 //	
 //}
-
+//
 //double Bertoli(profile profile_t, int i)
 //{
 //	double alpha = pi / 3;
-//
 //	profile prof_i;
 //
-//	prof_i.h = profile_t.h;
-//	prof_i.x = profile_t.x;
+//	prof_i.h = profile_t.h(i);
+//	prof_i.x = profile_t.x(i);
 //
-//	prof_i.a = a_fcn_n(prof_i.x, profile_t.T.get(i,1));
+//	a_fcn_n(prof_i.x, profile_t.T.get(i,1));
 //
 //	prof_i.b  = prof_i.a / sqrt2;
 //	prof_i.b_eff = prof_i.b / 4.0; // This is b_prime
 //
-//	prof_i.G = G_fcn_n(prof_i.x, profile_t.T(i));
-//	prof_i.nu = nu_fcn_n(prof_i.x, profile_t.T(i));
-//	prof_i.Y = Y_fcn_n(prof_i.x, profile_t.T(i));
-//
+//	prof_i.moduli_fcn();
+//	
 //	ax K = prof_i.G * prof_i.b * prof_i.b * (1 - (cos60* cos60) * prof_i.nu) / (2 * pi * (1 - prof_i.nu) * (std::log((prof_i.h.sum() - prof_i.h.cumsum(ROW))/prof_i.b) - 1));
 //	K.set(K.size(ROW), K(K.size(ROW) - 2));
 //
@@ -105,6 +120,6 @@ mx strain_fcn_calc(ax f, ax h, ax b_prime, mx rho)
 //
 //	double delta = abs(prof_i.f.sum() / (prof_i.N * prof_i.b_eff(0) * prof_i.h(1)));
 //
-//	return LAM(prof_i, K, delta);
+//	return LAM(prof_i, K, delta); 
 //}
-
+//
