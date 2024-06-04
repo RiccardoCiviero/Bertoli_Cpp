@@ -1,6 +1,7 @@
 #include "profile.h"
 
-void profile::h_profile_fcn() {
+void Profile::h_profile_fcn() {
+    h = ax(h_tot / resolution);
     int j = 0;
     for (double i = 0; i < h_tot; i += resolution) {
         h.set(j, i);
@@ -8,7 +9,8 @@ void profile::h_profile_fcn() {
     }
 }
 
-void profile::x_profile_fcn() {
+void Profile::x_profile_fcn() {
+    x = ax(h.size(ROW));
     for (double i = 0; i < h_tot; i += resolution) {
         if (i < h_graded) {
             x.set(i, xi + (xf - xi) * i / h_graded);
@@ -19,7 +21,8 @@ void profile::x_profile_fcn() {
     }
 }
 
-void profile::T_profile_fcn() {
+void Profile::T_profile_fcn() {
+    T = ax(h.size(ROW));
     double h_T_ramp_start = x_T_ramp_start / dx_m;
     for (double i = 0; i < h_tot; i += resolution) {
         if (i < h_T_ramp_start) {
@@ -34,23 +37,25 @@ void profile::T_profile_fcn() {
     }
 }
 
-void profile::a_fcn() {
+void Profile::a_fcn() {
+    a = ax(h.size(ROW));
     for(int i = 0; i < h.size(ROW); i ++) {
         a.set(i, (0.54310 + 0.02 * x(i) + 0.0027 * x(i) * x(i)) * 1e-9 * (1 + (2.6 + 2.55 * x(i)) * T(i) * 1e-6));
 	}
     
 }
 
-ax a_fcn_n(profile p, double T) {
-    ax temp;
-    for (int i = 0; i < p.h.size(ROW); i++) {
-        p.a.set(i, (0.54310 + 0.02 * p.x(i) + 0.0027 * p.x(i) * p.x(i)) * 1e-9 * (1 + (2.6 + 2.55 * p.x(i)) * T * 1e-6));
+void Profile::a_fcn_n(double T) {
+    a = ax(h.size(ROW));
+    for (int i = 0; i < h.size(ROW); i++) {
+        a.set(i, (0.54310 + 0.02 * x(i) + 0.0027 * x(i) * x(i)) * 1e-9 * (1 + (2.6 + 2.55 * x(i)) * T * 1e-6));
     }
-    return temp;
 }
 
-void profile::moduli_fcn() {
-
+void Profile::moduli_fcn() {
+    nu = ax(h.size(ROW));
+    G = ax(h.size(ROW));
+    Y = ax(h.size(ROW));
     double c11si_Pa, c12si_Pa, c44si_Pa, c11ge_Pa, c12ge_Pa, c44ge_Pa, C12_Pa, C44_Pa, C11_Pa;
     for (int i = 0; i < T.size(ROW); i++) {
         c11si_Pa = -36714285.714 * T(i) + 180385714285.6;

@@ -76,6 +76,7 @@ ax ax::ones(int r)
 
 ax mx::operator()(int i, Direction_t dir)
 {
+	if (i >= r || i < 0) throw new std::exception("Index fail");
 	return ax(*this, i, dir);
 }
 
@@ -139,7 +140,7 @@ ax operator/(double a, const ax& m)
 
 ax ax::slice(int start, int end) {
 	if(end <= start || start < 0 || end < 0) throw new std::exception("Index fail");
-	if(end > r) throw new std::exception("Slice dimension error");
+	if(end >= r) throw new std::exception("Slice dimension error");
 	
 	ax temp(end - start + 1);
 
@@ -151,10 +152,12 @@ ax ax::slice(int start, int end) {
 }
 
 void ax::set(int i, double v) {
+	if(i >= r || i < 0) throw new std::exception("Index fail");
 	data[i] = v;
 }
 
 double ax::get(int i) const {
+	if (i >= r || i < 0) throw new std::exception("Index fail");
 	return data[i];
 }
 
@@ -163,9 +166,15 @@ void ax::print() {
 	std::cout << "[ ";
 	for (int i = 0; i < r; i++)
 	{
-		std::cout << data[i] << " ";
+		std::cout << data[i] << std::endl;
 	}
 	std::cout << "]" << std::endl;
+}
+
+double& ax::operator()(int i)
+{
+	if (i >= r || i < 0) throw new std::exception("Index fail");
+	return data[i];
 }
 
 ax log(const ax& m) {

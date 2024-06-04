@@ -20,7 +20,7 @@ public:
 
 	void print();
 
-	double& operator()(int i) { return data[i]; }
+	double& operator()(int i);
 
 	ax slice(int start, int end);
 

@@ -52,7 +52,7 @@ public:
 	mx& operator=(mx&& m) noexcept;
 
 	
-	double& operator()(int i, int j) { return data[i*c+j]; };
+	double& operator()(int i, int j);
 
 
 	ax operator()(int i, Direction_t dir);
@@ -77,14 +77,14 @@ public:
 	/// </summary>
 	/// <param name="n">Saturator value</param>
 	/// <returns>A new matrix, result of operation</returns>
-	mx maximum(double n);
+	mx maximum(double n) const;
 	/// <summary>
 	/// Returns a matrix with elements equals 
 	///    min(element, n)
 	/// </summary>
 	/// <param name="n">Saturator value</param>
 	/// <returns>A new matrix, result of operation</returns>
-	mx minimum(double n);
+	mx minimum(double n) const;
 
 
 	mx cumsum(Direction_t direction) const;

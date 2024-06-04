@@ -22,6 +22,8 @@ mx::mx()
 
 mx::mx(int r, int c)
 {
+	if(r <= 0 || c <= 0)
+		throw new std::exception("Invalid dimensions");
 	this->r = r;
 	this->c = c;
 	data = new double[r * c];
@@ -29,6 +31,13 @@ mx::mx(int r, int c)
 
 mx::mx(const mx& m)
 {
+	if(m.data == nullptr || m.r == -1 || m.c == -1)
+	{
+		r = -1;
+		c = -1;
+		data = nullptr;
+		return;
+	}
 	r = m.r;
 	c = m.c;
 	data = new double[r * c];
@@ -71,11 +80,15 @@ mx::~mx()
 
 void mx::set(int i, int j, double val)
 {
+	if(i < 0 || i >= r || j < 0 || j >= c)
+		throw new std::exception("Index out of bounds");
 	data[i * c + j] = val;
 }
 
 double mx::get(int i, int j) const
 {
+	if (i < 0 || i >= r || j < 0 || j >= c)
+		throw new std::exception("Index out of bounds");
 	return data[i * c + j];
 }
 
@@ -135,6 +148,12 @@ mx& mx::operator=(mx&& m) noexcept
 	return *this;
 }
 
+double& mx::operator()(int i, int j)
+{
+	if (i < 0 || i >= r || j < 0 || j >= c)
+		throw new std::exception("Index out of bounds");
+	return data[i * c + j];
+}
 
 
 // Operators
@@ -253,7 +272,7 @@ mx log(const mx& m)
 	for (int i = 0; i < m.size(ROW); i++)
 		for (int j = 0; j < m.size(COL); j++)
 			temp.set(i, j, log(m.get(i, j)));
-	return mx();
+	return temp;
 }
 
 
@@ -297,11 +316,15 @@ mx mx::cumsum(Direction_t direction) const
 	mx temp(r, c);
 	if (direction == Direction_t::ROW)
 	{
+		for (int j = 0; j < c; j++)
+				temp.data[0 * c + j] = data[0 * c + j];
 		for (int i = 1; i < r; i++)
 			for(int j = 0; j < c; j++)
 				temp.data[i * c + j] = temp.data[(i - 1) * c + j] + data[i * c + j];
 	}
 	else {
+		for (int i = 0; i < r; i++)
+			temp.data[i * c + 0] = data[i * c + 0];
 		for(int j = 1; j < c; j++)
 			for (int i = 0; i < r; i++)
 				temp.data[i * c + j] = temp.data[i * c + j - 1] + data[i * c + j];
@@ -360,6 +383,8 @@ mx mx::sum(Direction_t direction) const
 
 mx mx::zeros(int r, int c)
 {
+	if (r <= 0 || c <= 0)
+		throw new std::exception("Invalid dimensions");
 	double* data = new double [r * c];
 	for (int i = 0; i < r * c; i++)
 		data[i] = 0;
@@ -369,6 +394,8 @@ mx mx::zeros(int r, int c)
 
 mx mx::ones(int r, int c)
 {
+	if (r <= 0 || c <= 0)
+		throw new std::exception("Invalid dimensions");
 	double* data = new double[r * c];
 	for (int i = 0; i < r * c; i++)
 		data[i] = 1;
@@ -401,7 +428,7 @@ double mx::minimum()
 	return min;
 }
 
-mx mx::maximum(double n)
+mx mx::maximum(double n) const
 {
 	mx temp(r, c);
 	for (int i = 0; i < r * c; i++)
@@ -410,7 +437,7 @@ mx mx::maximum(double n)
 }
 
 
-mx mx::minimum(double n)
+mx mx::minimum(double n) const
 {
 	mx temp(r, c);
 	for (int i = 0; i < r * c; i++)
