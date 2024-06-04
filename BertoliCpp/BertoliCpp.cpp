@@ -6,6 +6,8 @@
 #include "ax.h"
 #include "profile.h"
 
+#include <fstream>
+
 constexpr double pi = 3.14159265358979323846;
 constexpr double delta_res = 0.1e-6;
 
@@ -14,7 +16,7 @@ constexpr double cos60 = 0.5;
 
 
 mx strain_fcn_calc(ax f, ax h, ax b_prime, mx rho);
-double LAM(profile prof_i, ax K, double delta);
+ax LAM(profile prof_i, ax K, double delta);
 double Bertoli(profile profile_t, int i);
 void Bertoli_Wrapper();
 
@@ -68,6 +70,24 @@ int main()
 	p.h_tot = p.h_graded + p.h_const;
 	p.resolution = 0.05e-6; // Step size for the discretization of the profiles
 	std::cout<< p.h_tot / p.resolution<<std::endl;
+
+	ax strain = Bertoli(p,p.last());
+
+
+
+	// Open the file
+	std::ofstream file("/home/ricca/dev/Bertoli_Cpp/BertoliCpp/output.csv");
+
+	// Check if the file is opened successfully
+	if (!file.is_open())
+	{
+		std::cout << "Failed to open the file!" << std::endl;
+		return 1;
+	}
+	for(int i = 0; i < strain.size(ROW); i++)
+	{
+		file << p.h(i) << "," <<strain(i) << std::endl;
+	}
 }
 
 mx strain_fcn_calc(ax f, ax h, ax b_prime, mx rho)
@@ -77,7 +97,7 @@ mx strain_fcn_calc(ax f, ax h, ax b_prime, mx rho)
 	return p.cumsum(ROW) + f;
 }
 
-double LAM(profile p, ax K, double delta)
+ax LAM(profile p, ax K, double delta)
 {
 	int N = p.f.size(ROW);
 	mx rho = mx::zeros(N, 1);
@@ -108,7 +128,7 @@ double LAM(profile p, ax K, double delta)
 
 		delta *= 0.9;
 
-		return strain.last() * p.Y.last();
+		return strain;
 
 	}
 	
