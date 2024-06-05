@@ -32,6 +32,7 @@ public:
 	void set(int i, int j, double val);
 	double get(int i, int j) const;
 	void print();
+	std::stringstream to_string();
 	
 	/// <summary>
 	/// Copy-assignment operator 
@@ -63,12 +64,12 @@ public:
 	/// Returns the maximum value in the matrix
 	/// </summary>
 	/// <returns>The maximum element value</returns>
-	double maximum();
+	double maximum() const;
 	/// <summary>
 	/// Returns the minimum value in the matrix
 	/// </summary>
 	/// <returns>The minimum element value</returns>
-	double minimum();
+	double minimum() const;
 
 
 	/// <summary>
@@ -95,7 +96,7 @@ public:
 
 	double sum() const;
 
-	void print_size();
+	void print_size() const;
 	int size(Direction_t dir) const;
 	
 

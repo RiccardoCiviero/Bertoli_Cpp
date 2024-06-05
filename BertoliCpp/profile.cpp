@@ -2,18 +2,18 @@
 
 void Profile::h_profile_fcn() {
     h = ax(h_tot / resolution);
-    int j = 0;
-    for (double i = 0; i < h_tot; i += resolution) {
-        h.set(j, i);
-        j++;
+    double h_i = 0;
+    for (int i = 0; i < h.size(ROW); i++) {
+        h.set(i, h_i);
+        h_i = h_i + resolution;
     }
 }
 
 void Profile::x_profile_fcn() {
     x = ax(h.size(ROW));
-    for (double i = 0; i < h_tot; i += resolution) {
-        if (i < h_graded) {
-            x.set(i, xi + (xf - xi) * i / h_graded);
+    for (int i = 0; i < h.size(ROW); i++) {
+        if (h(i) < h_graded) {
+            x.set(i, xi + (xf - xi) * h(i) / h_graded);
         }
         else {
             x.set(i, xf);
@@ -24,11 +24,11 @@ void Profile::x_profile_fcn() {
 void Profile::T_profile_fcn() {
     T = ax(h.size(ROW));
     double h_T_ramp_start = x_T_ramp_start / dx_m;
-    for (double i = 0; i < h_tot; i += resolution) {
-        if (i < h_T_ramp_start) {
+    for (int i = 0; i < h.size(ROW); i++) {
+        if (h(i) < h_T_ramp_start) {
             T.set(i, Ti_K);
         }
-        else if (i < h_graded) {
+        else if (h(i) < h_graded) {
             T.set(i, Ti_K + resolution * (Tf_K - Ti_K) / (h_graded - h_T_ramp_start));
         }
         else {

@@ -48,7 +48,7 @@ public:
 
 	// Matrix-Vector inverse operators
 	mx operator+(const mx& m) const { return m + *this; }
-	mx operator-(const mx& m) const { return m + *this; }
+	mx operator-(const mx& m) const { return m - *this; }
 	mx operator*(const mx& m) const { return m * *this; }
 	mx operator/(const mx& m) const { return m / *this; }
 

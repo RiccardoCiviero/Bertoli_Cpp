@@ -89,8 +89,8 @@ mx mx::operator+(const ax& a) const
 	mx temp(r, c);
 	for (int i = 0; i < r; i++)
 		for (int j = 0; j < c; j++)
-			data[i * c + j] += a.get(i);
-	return mx();
+			temp.data[i * c + j] = data[i * c + j] + a.get(i);
+	return temp;
 }
 
 mx mx::operator-(const ax& a) const
@@ -98,8 +98,8 @@ mx mx::operator-(const ax& a) const
 	mx temp(r, c);
 	for (int i = 0; i < r; i++)
 		for (int j = 0; j < c; j++)
-			data[i * c + j] -= a.get(i);
-	return mx();
+			temp.data[i * c + j] = data[i * c + j] + a.get(i);
+	return temp;
 }
 
 mx mx::operator*(const ax& a) const
@@ -107,8 +107,8 @@ mx mx::operator*(const ax& a) const
 	mx temp(r, c);
 	for (int i = 0; i < r; i++)
 		for (int j = 0; j < c; j++)
-			data[i * c + j] *= a.get(i);
-	return mx();
+			temp.data[i * c + j] = data[i * c + j] + a.get(i);
+	return temp;
 }
 
 mx mx::operator/(const ax& a) const
@@ -116,8 +116,8 @@ mx mx::operator/(const ax& a) const
 	mx temp(r, c);
 	for (int i = 0; i < r; i++)
 		for (int j = 0; j < c; j++)
-			data[i * c + j] /= a.get(i);
-	return mx();
+			temp.data[i * c + j] = data[i * c + j] + a.get(i);
+	return temp;
 }
 
 ax operator+(double a, const ax& m)

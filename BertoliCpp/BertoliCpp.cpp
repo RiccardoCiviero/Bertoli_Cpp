@@ -201,6 +201,7 @@ double Bertoli(Profile profile_t, int i, bool wrapper)
 	prof_i.h.print();
 	prof_i.b.print();
 	ax x = ((prof_i.h.sum() - prof_i.h.cumsum()) / prof_i.b);
+	x.print();
 	ax y = log(x);
 	ax K = prof_i.G * prof_i.b * prof_i.b * (1.0 - (cos60 * cos60) * prof_i.nu) / (2.0 * pi * (1.0 - prof_i.nu) * (y - 1.0));
 	K.set(K.size(ROW)-1, K(K.size(ROW) - 2));
@@ -215,8 +216,8 @@ double Bertoli(Profile profile_t, int i, bool wrapper)
 double LAM(Profile p, ax K, double delta, bool wrapper)
 {
 	int N = p.f.size(ROW);
-	mx rho = mx::zeros(N, 1);
-	mx rho_vec_initializer = mx::zeros(N, N);
+	ax rho = ax::zeros(N);
+	mx rho_vec_initializer = mx::zeros(N, 9);
 	ax strain = p.f;
 
 	mx mod_matrix = mx({ { 1.0, 1.0 }, { 1.0, 0.0 }, { 1.0, -1.0 }, { 0.0, 1.0 }, { 0.0, 0.0 }, { 0.0, -1.0 }, { -1.0, 1.0 }, { -1.0, 0.0 }, { -1.0, -1.0 } });
@@ -227,15 +228,20 @@ double LAM(Profile p, ax K, double delta, bool wrapper)
 
 		for (int i = 0; i < N - 1; i++)
 		{
-			mx rho_vec = rho_vec_initializer * delta_vec; // bohh
+			mx rho_vec = rho * rho_vec_initializer;
+			
+			for (int j = 0; j < mod_matrix.size(COL); j++) {
+				rho_vec(i, j) = rho_vec(i, j) * delta_vec(0,j);
+				rho_vec(i + 1, j) = rho_vec(i, j) * delta_vec(1,j);
+			}
 
 			rho_vec = rho_vec.maximum(0);
 
 			mx strain_vec = strain_fcn_calc(strain, p.h, p.b_eff, rho_vec);
-			mx E_vec = strain_vec * strain_vec * p.Y * p.h + K * rho_vec * p.h;
+			ax E_vec = strain_vec * strain_vec * p.Y * p.h + K * rho_vec * p.h;
 			E_vec.sum(ROW);
 
-			i = E_vec.minimum();
+			i = E_vec.min();
 
 			strain = ax(strain_vec, i, ROW);
 			rho = ax(rho_vec, i, ROW);

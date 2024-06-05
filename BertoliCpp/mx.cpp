@@ -4,6 +4,7 @@
 #include <cassert>
 #include <algorithm>
 #include <vector>
+#include <sstream>
 
 mx::mx(double* data, int r, int c)
 {
@@ -103,6 +104,22 @@ void mx::print()
 		std::cout << std::endl << "  ";
 	}
 	std::cout << "]" << std::endl;
+}
+
+std::stringstream mx::to_string()
+{
+	std::stringstream ss;
+	ss << "mx (" << r << ", " << c << ")" << std::endl;
+	ss << "[ ";
+	for (int i = 0; i < r; i++)
+	{
+		for (int j = 0; j < c; j++)
+			ss << data[i * c + j] << " ";
+		ss << std::endl << "  ";
+	}
+	ss << "]" << std::endl;
+
+	return ss;
 }
 
 
@@ -351,7 +368,7 @@ std::istream& operator>>(std::istream& is, mx& m) {
 	return is;
 }
 
-void mx::print_size() {
+void mx::print_size() const {
 	std::cout << "(" << r << ", " << c << ")" << std::endl;
 }
 
@@ -410,7 +427,7 @@ double mx::sum() const
 	return sum;
 }
 
-double mx::maximum()
+double mx::maximum() const
 {
 	double max = data[0];
 	for (int i = 1; i < r * c; i++)
@@ -419,7 +436,7 @@ double mx::maximum()
 	return max;
 }
 
-double mx::minimum()
+double mx::minimum() const
 {
 	double min = data[0];
 	for (int i = 1; i < r * c; i++)
