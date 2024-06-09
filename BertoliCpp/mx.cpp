@@ -158,10 +158,10 @@ mx& mx::operator=(mx&& m) noexcept
 		return *this;
 
 	// Move data
-	delete[] data;
-	r = m.r;
-	c = m.c;
-	data = m.data;
+	delete[] data; // Delete old data stored in result
+	r = std::exchange(m.r, -2);
+	c = std::exchange(m.c, -2);
+	data = std::exchange(m.data, nullptr);
 	return *this;
 }
 
@@ -461,3 +461,4 @@ mx mx::minimum(double n) const
 		temp.data[i] = std::min(data[i], n);
 	return temp;
 }
+

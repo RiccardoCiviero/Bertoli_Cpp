@@ -4,8 +4,6 @@
 
 ax::ax(mx& m, int i, Direction_t dir)
 {
-	double *data;
-	int r, c;
 	if (dir == ROW) {
 		r = m.size(COL);
 		data = new double[m.size(COL)];
@@ -17,25 +15,31 @@ ax::ax(mx& m, int i, Direction_t dir)
 	else {
 		r = m.size(ROW);
 		data = new double[m.size(ROW)];
-		for (int j = 0; j < m.size(ROW); j++) {
+		for (int j = 0; j < m.size(ROW); ++j) {
 			data[j] = m.get(j, i);
 		}
 	}
 
 	c = 1;
-
-	this->data = data;
-	this->r = r;
-	this->c = c;
 }
 
 ax::ax(mx& m) {
-	if (m.size(COL) != 1) throw new std::exception("Cast to matrix to vector is allowed only for (nx1) matrixes (Column vectors)");
+	if (m.size(COL) != 1 && m.size(ROW) !=1) throw new std::exception("Cast to matrix to vector is allowed only for (nx1) matrixes (Column vectors) or (1xn) matrixes casting them to column vector");
 
-	r = m.size(ROW);
-	c = 1;
-	for (int i = 0; i < r; i++)
-		data[i] = m.get(i,1);
+	if (m.size(COL) == 1) {
+		r = m.size(ROW);
+		c = 1;
+		data = new double[r];
+		for (int i = 0; i < r; i++)
+			data[i] = m.get(i, 0);
+	}
+	else {
+		r = m.size(COL);
+		c = 1;
+		data = new double[r];
+		for (int i = 0; i < r; i++)
+			data[i] = m.get(0, i);
+	}
 }
 
 

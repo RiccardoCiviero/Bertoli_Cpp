@@ -43,12 +43,12 @@ void Example() {
 	div.cumsum(COL).print();
 
 	ax a = m(0, ROW);
-	a.print();
+
 
 	ax diva = a;
 	diva.print();
 	ax a1 = m(1, COL);
-	//ax sum = a + a1;
+	ax sum = a + a1;
 
 	a1.minimum_index();
 	a1.print();
@@ -87,7 +87,8 @@ int main()
 	p.a_fcn();
 	p.moduli_fcn();
 
-	
+
+
 	std::cout << p.h_tot / p.resolution<<std::endl;
 	//p.h.print();
 
@@ -118,67 +119,67 @@ mx strain_fcn_calc(ax f, ax h, ax b_prime, mx rho)
 	return p.cumsum(ROW) + f;
 }
 
-ax LAM(Profile p, ax K, double delta)
-{
-	int N = p.f.size(ROW);
-	mx rho = mx::zeros(N, 1);
-	mx rho_vec_initializer = mx::zeros(N, N);
-	ax strain = p.f;
+//ax LAM(Profile p, ax K, double delta)
+//{
+//	int N = p.f.size(ROW);
+//	mx rho = mx::zeros(N, 1);
+//	mx rho_vec_initializer = mx::zeros(N, 9);
+//	ax strain = p.f;
+//
+//	mx mod_matrix = mx({ { 1.0, 1.0 }, { 1.0, 0.0 }, { 1.0, -1.0 }, { 0.0, 1.0 }, { 0.0, 0.0 }, { 0.0, -1.0 }, { -1.0, 1.0 }, { -1.0, 0.0 }, { -1.0, -1.0 } });
+//
+//	while (delta > delta_res)
+//	{
+//		mx delta_vec = mod_matrix * delta;
+//
+//		for (int i = 0; i < N-1; i++)
+//		{
+//			mx rho_vec = rho_vec * delta_vec; // bohh
+//
+//			rho_vec = rho_vec.maximum(0);
+//
+//			mx strain_vec = strain_fcn_calc(strain, p.h, p.b_eff, rho_vec);
+//			mx E_vec = strain_vec * strain_vec * p.Y * p.h + K * rho_vec * p.h;
+//			E_vec.sum(ROW);
+//
+//			i = E_vec.minimum();
+//
+//			strain = ax(strain_vec, i, ROW);
+//			rho = ax(rho_vec,i,ROW);
+//		}
+//
+//		delta *= 0.9;
+//
+//
+//	}
+//	return strain;
+//	
+//}
 
-	mx mod_matrix = mx({ { 1.0, 1.0 }, { 1.0, 0.0 }, { 1.0, -1.0 }, { 0.0, 1.0 }, { 0.0, 0.0 }, { 0.0, -1.0 }, { -1.0, 1.0 }, { -1.0, 0.0 }, { -1.0, -1.0 } });
-
-	while (delta > delta_res)
-	{
-		mx delta_vec = mod_matrix * delta;
-
-		for (int i = 0; i < N-1; i++)
-		{
-			mx rho_vec = rho_vec * delta_vec; // bohh
-
-			rho_vec = rho_vec.maximum(0);
-
-			mx strain_vec = strain_fcn_calc(strain, p.h, p.b_eff, rho_vec);
-			mx E_vec = strain_vec * strain_vec * p.Y * p.h + K * rho_vec * p.h;
-			E_vec.sum(ROW);
-
-			i = E_vec.minimum();
-
-			strain = ax(strain_vec, i, ROW);
-			rho = ax(rho_vec,i,ROW);
-		}
-
-		delta *= 0.9;
-
-
-	}
-	return strain;
-	
-}
-
-ax Bertoli(Profile profile_t, int i)
-{
-	double alpha = pi / 3;
-	Profile prof_i;
-
-	prof_i.h = profile_t.h(i);
-	prof_i.x = profile_t.x(i);
-
-	prof_i.a_fcn_n(profile_t.T(i));
-
-	prof_i.b  = prof_i.a / sqrt2;
-	prof_i.b_eff = prof_i.b / 4.0; // This is b_prime
-
-	prof_i.moduli_fcn();
-	
-	ax K = prof_i.G * prof_i.b * prof_i.b * (1.0 - (cos60* cos60) * prof_i.nu) / (2 * pi * (1 - prof_i.nu) * (log((prof_i.h.sum() - prof_i.h.cumsum())/prof_i.b) - 1));
-	K.set(K.size(ROW), K(K.size(ROW) - 2));
-
-	prof_i.f = (prof_i.a(0) - prof_i.a) / prof_i.a;
-
-	double delta = abs(prof_i.f.sum() / (prof_i.N * prof_i.b_eff(0) * prof_i.h(1)));
-
-	return LAM(prof_i, K, delta); 
-}
+//ax Bertoli(Profile profile_t, int i)
+//{
+//	double alpha = pi / 3;
+//	Profile prof_i;
+//
+//	prof_i.h = profile_t.h(i);
+//	prof_i.x = profile_t.x(i);
+//
+//	prof_i.a_fcn_n(profile_t.T(i));
+//
+//	prof_i.b  = prof_i.a / sqrt2;
+//	prof_i.b_eff = prof_i.b / 4.0; // This is b_prime
+//
+//	prof_i.moduli_fcn();
+//	
+//	ax K = prof_i.G * prof_i.b * prof_i.b * (1.0 - (cos60* cos60) * prof_i.nu) / (2 * pi * (1 - prof_i.nu) * (log((prof_i.h.sum() - prof_i.h.cumsum())/prof_i.b) - 1));
+//	K.set(K.size(ROW), K(K.size(ROW) - 2));
+//
+//	prof_i.f = (prof_i.a(0) - prof_i.a) / prof_i.a;
+//
+//	double delta = abs(prof_i.f.sum() / (prof_i.N * prof_i.b_eff(0) * prof_i.h(1)));
+//
+//	return LAM(prof_i, K, delta); 
+//}
 
 double Bertoli(Profile profile_t, int i, bool wrapper)
 {
@@ -188,6 +189,7 @@ double Bertoli(Profile profile_t, int i, bool wrapper)
 	prof_i.h = profile_t.h.slice(0,i);
 	prof_i.x = profile_t.x.slice(0,i);
 	prof_i.T = profile_t.T(i) * ax::ones(prof_i.h.size(ROW));
+	prof_i.N = prof_i.h.size(ROW);
 
 	prof_i.a_fcn();
 
@@ -226,11 +228,11 @@ double LAM(Profile p, ax K, double delta, bool wrapper)
 	{
 		mx delta_vec = mod_matrix * delta;
 
-		for (int i = 0; i < N - 1; i++)
+		for (int i = 0; i < N - 1; ++i)
 		{
 			mx rho_vec = rho * rho_vec_initializer;
 			
-			for (int j = 0; j < mod_matrix.size(COL); j++) {
+			for (int j = 0; j < mod_matrix.size(COL); ++j) {
 				rho_vec(i, j) = rho_vec(i, j) * delta_vec(0,j);
 				rho_vec(i + 1, j) = rho_vec(i, j) * delta_vec(1,j);
 			}
@@ -238,17 +240,16 @@ double LAM(Profile p, ax K, double delta, bool wrapper)
 			rho_vec = rho_vec.maximum(0);
 
 			mx strain_vec = strain_fcn_calc(strain, p.h, p.b_eff, rho_vec);
-			ax E_vec = strain_vec * strain_vec * p.Y * p.h + K * rho_vec * p.h;
-			E_vec.sum(ROW);
+			mx E_vec = strain_vec * strain_vec * p.Y * p.h + K * rho_vec * p.h;
+			auto E_conf = E_vec.sum(ROW);
 
-			i = E_vec.min();
+			int k = ax(E_conf).minimum_index();
 
-			strain = ax(strain_vec, i, ROW);
-			rho = ax(rho_vec, i, ROW);
+			strain = ax(strain_vec, k, ROW);
+			rho = ax(rho_vec, k, ROW);
 		}
 
 		delta *= 0.9;
-
 
 	}
 	return strain.last() / p.Y.last();
