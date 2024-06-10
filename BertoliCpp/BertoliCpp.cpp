@@ -4,12 +4,12 @@
 #include <iostream>
 #include <fstream>
 
+#include <gsl/gsl>
+
 #include "mx.h"
 #include "ax.h"
 #include "profile.h"
 #include "minimizer.h"
-
-
 
 void Example() {
 	mx m({ {1, 2, 3}, {4, 5, 6} });
@@ -51,7 +51,7 @@ int main()
 	//Example();
 	Profile p;
 	p.xi = 0;
-	p.xf = 0.1;
+	p.xf = 0.4;
 
 	p.dx_m = 0.07 * 1e6;
 	
@@ -64,9 +64,10 @@ int main()
 	
 	p.h_graded = (p.xf - p.xi) / p.dx_m;
 	p.h_tot = p.h_graded + p.h_const;
-	p.resolution = 0.05e-6; // Step size for the discretization of the profiles
+	p.resolution = 5e-9; // Step size for the discretization of the profiles
 	p.N = p.h_tot / p.resolution;
 	
+
 	p.h_profile_fcn();
 	p.x_profile_fcn();
 	p.T_profile_fcn();
@@ -79,20 +80,22 @@ int main()
 	//p.h.print();
 
 	p.strain = ax(p.h.size(ROW));
-	std::cout << "Stress: " << setup(p, p.h.size(ROW) - 1, true) << std::endl; // -1??
+	//std::cout << "Stress: " << setup_wrapped(p, p.h.size(ROW) - 1) << std::endl; // -1??
 
+	p.strain = setup(p, p.h.size(ROW) - 1);
 
-	// Open the file
-	//std::ofstream file("/home/ricca/dev/Bertoli_Cpp/BertoliCpp/output.csv");
+	//Open the file
+	std::ofstream file("output.csv");
 
-	// Check if the file is opened successfully
-	//if (!file.is_open())
-	//{
-	//	std::cout << "Failed to open the file!" << std::endl;
-	//	return 1;
-	//}
-	//for(int i = 0; i < strain.size(ROW); i++)
-	//{
-	//	file << p.h(i) << "," <<strain(i) << std::endl;
-	//}
+	//Check if the file is opened successfully
+	if (!file.is_open())
+	{
+		std::cout << "Failed to open the file!" << std::endl;
+		return 1;
+	}
+	for(int i = 0; i < p.strain.size(ROW); i++)
+	{
+		file << p.h(i) << "," << p.strain(i) << "\n";
+	}
+	file << "Htot: " << p.h_tot << "\n";
 }
