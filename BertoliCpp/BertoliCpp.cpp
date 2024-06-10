@@ -75,16 +75,15 @@ int main()
 
 
 
-	std::cout << p.h_tot / p.resolution<<std::endl;
+	std::cout << "Resolution: " << p.h_tot / p.resolution << std::endl;
 	//p.h.print();
 
 	p.strain = ax(p.h.size(ROW));
-	std::cout << setup(p, p.h.size(ROW)-1, true) << std::endl; // -1??
-
+	std::cout << "Stress: " << setup(p, p.h.size(ROW) - 1, true) << std::endl; // -1??
 
 
 	// Open the file
-	std::ofstream file("/home/ricca/dev/Bertoli_Cpp/BertoliCpp/output.csv");
+	//std::ofstream file("/home/ricca/dev/Bertoli_Cpp/BertoliCpp/output.csv");
 
 	// Check if the file is opened successfully
 	//if (!file.is_open())

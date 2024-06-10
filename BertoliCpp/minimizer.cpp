@@ -12,24 +12,20 @@ double setup(const Profile& profile_t, int i, bool wrapper)
 	auto alpha = pi / 3;
 	Profile prof_i;
 
-	prof_i.h = profile_t.h.slice(0, i); // Serve una versione di slice const -> altrimenti mi sovrascrivi profile_t: è corretto passare per const reference profile e assegnare a prof_i solo una "view" di profile_t
+	prof_i.h = profile_t.h.slice(0, i); 
 	prof_i.x = profile_t.x.slice(0, i);
 	prof_i.T = profile_t.T(i) * ax::ones(prof_i.h.size(ROW));
 	prof_i.N = prof_i.h.size(ROW);
 
 	prof_i.a_fcn();
 
-	prof_i.a.print();
 	prof_i.b = prof_i.a / sqrt2;
 
 	prof_i.b_eff = prof_i.b / 4.0; // This is b_prime
 
 	prof_i.moduli_fcn();
 
-	prof_i.h.print();
-	prof_i.b.print();
 	ax x = ((prof_i.h.sum() - prof_i.h.cumsum()) / prof_i.b);
-	x.print();
 	ax y = log(x);
 	ax K = prof_i.G * prof_i.b * prof_i.b * (1.0 - (cos60 * cos60) * prof_i.nu) / (2.0 * pi * (1.0 - prof_i.nu) * (y - 1.0));
 	K.set(K.size(ROW) - 1, K(K.size(ROW) - 2));
@@ -50,6 +46,7 @@ double LAM(const Profile& p, const ax& K, double delta, bool wrapper)
 
 	mx mod_matrix = mx({ { 1.0, 1.0 }, { 1.0, 0.0 }, { 1.0, -1.0 }, { 0.0, 1.0 }, { 0.0, 0.0 }, { 0.0, -1.0 }, { -1.0, 1.0 }, { -1.0, 0.0 }, { -1.0, -1.0 } });
 
+	auto counter = 0;
 	while (delta > delta_res)
 	{
 		mx delta_vec = mod_matrix * delta;
@@ -69,15 +66,17 @@ double LAM(const Profile& p, const ax& K, double delta, bool wrapper)
 			mx E_vec = strain_vec * strain_vec * p.Y * p.h + K * rho_vec * p.h;
 			auto E_conf = E_vec.sum(ROW);
 
-			auto k = ax(E_conf).minimum_index();
+			const int k = ax(E_conf).minimum_index();
 
-			strain = ax(strain_vec, k, ROW);
-			rho = ax(rho_vec, k, ROW);
+			strain = ax(strain_vec, k, COL);
+			rho = ax(rho_vec, k, COL);
 		}
 
 		delta *= 0.9;
+		counter++;
 
 	}
-	return strain.last() / p.Y.last();
+	std::cout << "Iterations: " << counter << std::endl;
+	return strain(N / 2) / p.Y(N/2);
 
 }

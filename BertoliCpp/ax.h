@@ -20,9 +20,9 @@ public:
 
 	void print();
 
-	double& operator()(int i);
+	double& operator()(int i) const;
 
-	ax slice(int start, int end);
+	ax slice(int start, int end) const;
 
 	/// <summary>
 	/// Returns the row of the maximum value in the vector in the array
@@ -75,6 +75,7 @@ private:
 
 	using mx::sum;
 	using mx::cumsum;
+
 };
 
 // Inverse Value-Vector operators

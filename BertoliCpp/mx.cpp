@@ -95,13 +95,13 @@ double mx::get(int i, int j) const
 
 void mx::print()
 {
-	std::cout << "mx (" << r << ", " << c << ")" << std::endl;
+	std::cout << "mx (" << r << ", " << c << ")" << "\n";
 	std::cout << "[ ";
 	for (int i = 0; i < r; i++)
 	{
 		for (int j = 0; j < c; j++)
 			std::cout << data[i * c + j] << " ";
-		std::cout << std::endl << "  ";
+		std::cout << "\n" << "  ";
 	}
 	std::cout << "]" << std::endl;
 }
@@ -109,13 +109,13 @@ void mx::print()
 std::stringstream mx::to_string()
 {
 	std::stringstream ss;
-	ss << "mx (" << r << ", " << c << ")" << std::endl;
+	ss << "mx (" << r << ", " << c << ")" << "\n";
 	ss << "[ ";
 	for (int i = 0; i < r; i++)
 	{
 		for (int j = 0; j < c; j++)
 			ss << data[i * c + j] << " ";
-		ss << std::endl << "  ";
+		ss << "\n" << "  ";
 	}
 	ss << "]" << std::endl;
 
@@ -382,14 +382,14 @@ mx mx::sum(Direction_t direction) const
 {
 	if (direction == Direction_t::ROW)
 	{
-		mx temp(1, c);
-		for (int j = 0; j < c; j++)
-			for (int i = 0; i < r; i++)
+		mx temp =  zeros(1,c);
+		for (int j = 0; j < c; ++j)
+			for (int i = 0; i < r; ++i)
 				temp.data[j] += data[i * c + j];
 		return temp;
 	}
 	else {
-		mx temp(r, 1);
+		mx temp = zeros(r,1);
 		for (int i = 0; i < r; i++)
 			for (int j = 0; j < c; j++)
 				temp.data[i] += data[i * c + j];

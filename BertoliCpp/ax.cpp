@@ -102,7 +102,7 @@ mx mx::operator-(const ax& a) const
 	mx temp(r, c);
 	for (int i = 0; i < r; i++)
 		for (int j = 0; j < c; j++)
-			temp.data[i * c + j] = data[i * c + j] + a.get(i);
+			temp.data[i * c + j] = data[i * c + j] - a.get(i);
 	return temp;
 }
 
@@ -111,7 +111,7 @@ mx mx::operator*(const ax& a) const
 	mx temp(r, c);
 	for (int i = 0; i < r; i++)
 		for (int j = 0; j < c; j++)
-			temp.data[i * c + j] = data[i * c + j] + a.get(i);
+			temp.data[i * c + j] = data[i * c + j] * a.get(i);
 	return temp;
 }
 
@@ -120,7 +120,7 @@ mx mx::operator/(const ax& a) const
 	mx temp(r, c);
 	for (int i = 0; i < r; i++)
 		for (int j = 0; j < c; j++)
-			temp.data[i * c + j] = data[i * c + j] + a.get(i);
+			temp.data[i * c + j] = data[i * c + j] / a.get(i);
 	return temp;
 }
 
@@ -142,7 +142,7 @@ ax operator/(double a, const ax& m)
 }
 
 
-ax ax::slice(int start, int end) {
+ax ax::slice(int start, int end) const {
 	if(end <= start || start < 0 || end < 0) throw new std::exception("Index fail");
 	if(end >= r) throw new std::exception("Slice dimension error");
 	
@@ -166,16 +166,16 @@ double ax::get(int i) const {
 }
 
 void ax::print() {
-	std::cout << "ax (" << r << ", " << c << ")" << std::endl;
+	std::cout << "ax (" << r << ", " << c << ")" << "\n";
 	std::cout << "[ ";
 	for (int i = 0; i < r; i++)
 	{
-		std::cout << data[i] << std::endl;
+		std::cout << data[i] << "\n";
 	}
 	std::cout << "]" << std::endl;
 }
 
-double& ax::operator()(int i)
+double& ax::operator()(int i) const
 {
 	if (i >= r || i < 0) throw new std::exception("Index fail");
 	return data[i];
