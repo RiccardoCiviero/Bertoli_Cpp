@@ -23,7 +23,7 @@ void Profile::x_profile_fcn() {
 
 void Profile::T_profile_fcn() {
     T = ax(h.size(ROW));
-    double h_T_ramp_start = x_T_ramp_start / dx_m;
+    auto h_T_ramp_start = x_T_ramp_start / dx_m;
     for (int i = 0; i < h.size(ROW); i++) {
         if (h(i) < h_T_ramp_start) {
             T.set(i, Ti_K);

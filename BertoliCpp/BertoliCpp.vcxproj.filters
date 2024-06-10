@@ -27,6 +27,9 @@
     <ClCompile Include="profile.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="minimizer.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="mx.h">
@@ -36,6 +39,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="profile.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="minimizer.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

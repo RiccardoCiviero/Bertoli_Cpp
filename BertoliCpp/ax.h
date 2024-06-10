@@ -8,7 +8,7 @@
 class ax : public mx
 {
 public:
-	ax() : mx() {}
+	ax() noexcept : mx() {}
 	ax (int r) : mx(r, 1) {} 
 	ax (const ax& a) : mx(a) {}
 	ax (mx& m, int i, Direction_t dir);
@@ -29,18 +29,18 @@ public:
 	/// 
 	/// </summary>
 	/// <returns>Row index</returns>
-	int maximum_index();
+	int maximum_index() noexcept;
 	/// <summary>
 	/// Returns the row of the minimum value in the vector in the array
 	/// 
 	/// </summary>
 	/// <returns>Row index</returns>
-	int minimum_index();
+	int minimum_index() noexcept;
 
 	static ax zeros(int r);
 	static ax ones(int r);
 
-	double last() { return data[r-1]; }
+	double last() const noexcept { return data[r-1]; }
 
 	ax cumsum() const { return (ax&)mx::cumsum(ROW); }
 	double sum() const { return mx::sum(); }

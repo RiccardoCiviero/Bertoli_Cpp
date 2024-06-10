@@ -19,10 +19,10 @@ private:
 protected:
 	double* data;
 	int r, c;
-	mx(double* data, int r, int c);
+	mx(double* data, int r, int c) noexcept;
 
 public:
-	mx();
+	mx() noexcept;
 	mx(int r, int c);
 	mx(const mx& m);
 	mx(int r, int c, std::initializer_list<double> list);
@@ -64,12 +64,12 @@ public:
 	/// Returns the maximum value in the matrix
 	/// </summary>
 	/// <returns>The maximum element value</returns>
-	double maximum() const;
+	double maximum() const noexcept;
 	/// <summary>
 	/// Returns the minimum value in the matrix
 	/// </summary>
 	/// <returns>The minimum element value</returns>
-	double minimum() const;
+	double minimum() const noexcept;
 
 
 	/// <summary>
@@ -78,14 +78,14 @@ public:
 	/// </summary>
 	/// <param name="n">Saturator value</param>
 	/// <returns>A new matrix, result of operation</returns>
-	mx maximum(double n) const;
+	mx maximum(double n) const noexcept;
 	/// <summary>
 	/// Returns a matrix with elements equals 
 	///    min(element, n)
 	/// </summary>
 	/// <param name="n">Saturator value</param>
 	/// <returns>A new matrix, result of operation</returns>
-	mx minimum(double n) const;
+	mx minimum(double n) const noexcept;
 
 
 	mx cumsum(Direction_t direction) const;
@@ -94,7 +94,7 @@ public:
 	static mx zeros(int r, int c);
 	static mx ones(int r, int c);
 
-	double sum() const;
+	double sum() const noexcept;
 
 	void print_size() const;
 	int size(Direction_t dir) const;

@@ -6,14 +6,14 @@
 #include <vector>
 #include <sstream>
 
-mx::mx(double* data, int r, int c)
+mx::mx(double* data, int r, int c) noexcept
 {
 	this->data = data;
 	this->r = r;
 	this->c = c;
 }
 
-mx::mx()
+mx::mx() noexcept
 {
 	r = -1;
 	c = -1;
@@ -419,7 +419,7 @@ mx mx::ones(int r, int c)
 	return mx(data, r, c);
 }
 
-double mx::sum() const
+double mx::sum() const noexcept
 {
 	double sum = 0;
 	for(int i = 0; i < r * c; i++)
@@ -427,7 +427,7 @@ double mx::sum() const
 	return sum;
 }
 
-double mx::maximum() const
+double mx::maximum() const noexcept
 {
 	double max = data[0];
 	for (int i = 1; i < r * c; i++)
@@ -436,7 +436,7 @@ double mx::maximum() const
 	return max;
 }
 
-double mx::minimum() const
+double mx::minimum() const noexcept
 {
 	double min = data[0];
 	for (int i = 1; i < r * c; i++)
@@ -445,7 +445,7 @@ double mx::minimum() const
 	return min;
 }
 
-mx mx::maximum(double n) const
+mx mx::maximum(double n) const noexcept
 {
 	mx temp(r, c);
 	for (int i = 0; i < r * c; i++)
@@ -454,7 +454,7 @@ mx mx::maximum(double n) const
 }
 
 
-mx mx::minimum(double n) const
+mx mx::minimum(double n) const noexcept
 {
 	mx temp(r, c);
 	for (int i = 0; i < r * c; i++)

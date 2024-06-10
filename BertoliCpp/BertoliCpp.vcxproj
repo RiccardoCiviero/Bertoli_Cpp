@@ -70,6 +70,10 @@
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <RunCodeAnalysis>true</RunCodeAnalysis>
+    <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
@@ -106,6 +110,7 @@
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpplatest</LanguageStandard>
       <GenerateXMLDocumentationFiles>true</GenerateXMLDocumentationFiles>
+      <EnablePREfast>true</EnablePREfast>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -131,11 +136,13 @@
   <ItemGroup>
     <ClCompile Include="ax.cpp" />
     <ClCompile Include="BertoliCpp.cpp" />
+    <ClCompile Include="minimizer.cpp" />
     <ClCompile Include="mx.cpp" />
     <ClCompile Include="profile.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="ax.h" />
+    <ClInclude Include="minimizer.h" />
     <ClInclude Include="mx.h" />
     <ClInclude Include="profile.h" />
   </ItemGroup>

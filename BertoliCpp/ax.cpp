@@ -43,7 +43,7 @@ ax::ax(mx& m) {
 }
 
 
-int ax::maximum_index()
+int ax::maximum_index() noexcept
 {
 	int max = 0;
 	for (int i = 1; i < r; i++)
@@ -53,7 +53,7 @@ int ax::maximum_index()
 }
 
 
-int ax::minimum_index()
+int ax::minimum_index() noexcept
 {
 	int min = 0;
 	for (int i = 1; i < r; i++)
