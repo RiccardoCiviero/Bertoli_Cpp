@@ -119,6 +119,7 @@ ax LAM(const Profile& p, const ax& K, double delta)
 	ax strain = p.f;
 
 	mx mod_matrix = mx({ { 1.0, 1.0 }, { 1.0, 0.0 }, { 1.0, -1.0 }, { 0.0, 1.0 }, { 0.0, 0.0 }, { 0.0, -1.0 }, { -1.0, 1.0 }, { -1.0, 0.0 }, { -1.0, -1.0 } });
+	mod_matrix.print();
 
 	auto counter = 0;
 	while (delta > delta_res)
@@ -129,9 +130,9 @@ ax LAM(const Profile& p, const ax& K, double delta)
 		{
 			mx rho_vec = rho * rho_vec_initializer;
 
-			for (int j = 0; j < mod_matrix.size(COL); ++j) {
-				rho_vec(i, j) = rho_vec(i, j) * delta_vec(0, j);
-				rho_vec(i + 1, j) = rho_vec(i, j) * delta_vec(1, j);
+			for (int j = 0; j < mod_matrix.size(ROW); ++j) {
+				rho_vec(i, j) = rho_vec(i, j) * delta_vec(j, 0);
+				rho_vec(i + 1, j) = rho_vec(i, j) * delta_vec(j, 1);
 			}
 
 			rho_vec = rho_vec.maximum(0);

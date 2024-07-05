@@ -4,8 +4,6 @@
 #include <iostream>
 #include <fstream>
 
-#include <gsl/gsl>
-
 #include "mx.h"
 #include "ax.h"
 #include "profile.h"
